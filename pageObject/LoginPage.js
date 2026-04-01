@@ -15,7 +15,9 @@ exports.LoginPage = class LoginPage {
 
   async login(username, password) {
     await this.usernameInput.fill(username);
+    await expect(this.usernameInput).toHaveValue(username);
     await this.passwordInput.fill(password);
+    await expect(this.passwordInput).toHaveValue(password);
     await this.loginButton.click();
   }
 };
