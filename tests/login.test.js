@@ -52,10 +52,12 @@ test.describe("Login Tests", () => {
     await loginPage.loginButton.click();
     await inventoryPage.inventoryList.waitFor({ state: "visible" });
     const endTime = Date.now();
-    
+
     await expect(inventoryPage.inventoryHeader).toBeVisible();
     await expect(page).toHaveURL("/inventory.html");
     const duration = endTime - startTime;
+    expect(duration).toBeGreaterThanOrEqual(4000);
+    
 
     console.log("Log in duration:" + duration / 1000 + " seconds");
   });
