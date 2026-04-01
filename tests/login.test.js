@@ -12,7 +12,6 @@ test.describe("Login Tests", () => {
     await expect(inventoryPage.inventoryHeader).toBeVisible();
     await expect(inventoryPage.inventoryList).toBeVisible();
     await expect(page).toHaveURL("/inventory.html");
-    console.log("Successful Login Test Passed");
   });
 
   test("Login with Locked Out User", async ({ page }) => {
@@ -25,7 +24,6 @@ test.describe("Login Tests", () => {
       "Epic sadface: Sorry, this user has been locked out.",
     );
     await expect(page).not.toHaveURL("/inventory.html");
-    console.log("Login with Locked Out User Test Passed");
   });
 
   test("Login with Problem User", async ({ page }) => {
@@ -40,16 +38,25 @@ test.describe("Login Tests", () => {
     const count = await inventoryPage.countImgs(inventoryPage.problemImg);
     expect(count).toBe(6);
   });
-  
-   test("Login with glitch user", async ({ page }) => {
+
+  test("Login with glitch user", async ({ page }) => {
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
 
     await page.goto("/");
-    await loginPage.login(process.env.GLITCH_USER, process.env.PASSWORD);
+
+    await loginPage.usernameInput.fill(process.env.GLITCH_USER);
+    await loginPage.passwordInput.fill(process.env.PASSWORD);
+    
+    const startTime = Date.now();
+    await loginPage.loginButton.click();
+    await inventoryPage.inventoryList.waitFor({ state: "visible" });
+    const endTime = Date.now();
+    
     await expect(inventoryPage.inventoryHeader).toBeVisible();
-    await expect(inventoryPage.inventoryList).toBeVisible();
     await expect(page).toHaveURL("/inventory.html");
-     
-   });
+    const duration = endTime - startTime;
+
+    console.log("Log in duration:" + duration / 1000 + " seconds");
+  });
 });
