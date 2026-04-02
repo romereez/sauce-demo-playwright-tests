@@ -1,6 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { LoginPage } = require("../pageObject/LoginPage");
 const { InventoryPage } = require("../pageObject/InventoryPage");
+
 test.describe("Login Tests", () => {
   test("Successful Login", async ({ page }) => {
     const loginPage = new LoginPage(page);
@@ -46,7 +47,9 @@ test.describe("Login Tests", () => {
     await page.goto("/");
 
     await loginPage.usernameInput.fill(process.env.GLITCH_USER);
+    await expect(loginPage.usernameInput).toHaveValue(process.env.GLITCH_USER);
     await loginPage.passwordInput.fill(process.env.PASSWORD);
+    await expect(loginPage.passwordInput).toHaveValue(process.env.PASSWORD);
     
     const startTime = Date.now();
     await loginPage.loginButton.click();
@@ -58,7 +61,27 @@ test.describe("Login Tests", () => {
     const duration = endTime - startTime;
     expect(duration).toBeGreaterThanOrEqual(4000);
     
-
     console.log("Log in duration:" + duration / 1000 + " seconds");
   });
+
+  test("Login with Error User", async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+     
+    await page.goto("/");
+    await loginPage.login(process.env.ERROR_USER, process.env.PASSWORD);
+    await expect(page).toHaveURL("/inventory.html");
+    await inventoryPage.inventoryList.waitFor({ state: "visible" });
+  });
+
+  test("Visual User Login", async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+     
+    await page.goto("/");
+    await loginPage.login(process.env.VISUAL_USER, process.env.PASSWORD);
+    await expect(page).toHaveURL("/inventory.html");
+    await inventoryPage.inventoryList.waitFor({ state: "visible" });
+  });
+  
 });
