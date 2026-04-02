@@ -3,6 +3,7 @@ const { LoginPage } = require("../pageObject/LoginPage");
 const { InventoryPage } = require("../pageObject/InventoryPage");
 
 test.describe("Login Tests", () => {
+
   test("Successful Login", async ({ page }) => {
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
