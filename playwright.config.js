@@ -21,5 +21,5 @@ module.exports = defineConfig({
   ],
   timeout: 30 * 1000,
   screenshot: "only-on-failure",
-  workers: 1,
+  workers: 2,
 });

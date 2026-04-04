@@ -20,4 +20,8 @@ exports.LoginPage = class LoginPage {
     await expect(this.passwordInput).toHaveValue(password);
     await this.loginButton.click();
   }
+
+
+  
 };
+
